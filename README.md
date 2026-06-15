@@ -141,7 +141,7 @@ This mechanism preserves user dashboard preferences for 24 hours.
 Create a new database schema:
 
 ```sql
-CREATE DATABASE storeeverything_db;
+CREATE DATABASE store_everything;
 ```
 
 Configure your credentials inside:
