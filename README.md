@@ -188,7 +188,7 @@ http://localhost:8080/
 
 ## 📚 Academic Context
 
-This project was developed as part of a university coursework assignment focused on:
+This project was developed as part of a university coursework  **Web Applications Development in Java** (Erasmus Program) assignment focused on:
 
 * Enterprise Java Web Development
 * Spring Boot Ecosystem
@@ -209,11 +209,7 @@ The application explores state persistence paradigms and enterprise security arc
 
 ### License
 
-Licensed under the **MIT License**.
-
-### Project Type
-
-Semester Project for **Web Applications Development in Java** (Erasmus Program).
+This project is licensed under the [MIT License](LICENSE)
 
 
 ```
