@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>StoreEverything - Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="navbar">
+    <h1>StoreEverything Dashboard</h1>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a th:href="@{/dashboard}" style="font-weight: bold; text-decoration: underline;">Home</a>
+            <a th:href="@{/categories}">Categories</a>
+            <a th:href="@{/information/shared-with-me}">Shared With Me</a>
+
+            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+               th:href="@{/admin/users}"
+               class="admin-link">
+                Manage Users
+            </a>
+        </div>
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="logout-btn">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+<div class="dashboard-layout">
+
+    <div class="panel form-panel">
+        <h2>Add Information</h2>
+        <form th:action="@{/information/add}" th:object="${newInformation}" method="post">
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" th:field="*{title}" required autofocus />
+                <span class="form-hint">3-20 characters</span>
+                <span class="error-text" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" th:field="*{content}" required></textarea>
+                <span class="form-hint">5-500 characters</span>
+                <span class="error-text" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="link">Resource Link (Optional)</label>
+                <input type="text" id="link" th:field="*{link}" placeholder="https://example.com" />
+                <span class="form-hint">URL reference if applicable</span>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" th:field="*{category}" required>
+                    <option value="" disabled selected>-- Select a Category --</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+                <span class="form-hint">Link this note to an existing category</span>
+            </div>
+
+            <button type="submit" class="btn-submit">Save Information</button>
+        </form>
+    </div>
+
+    <div class="panel content-panel">
+        <h2>Your Repository</h2>
+
+        <div class="panel" style="margin-bottom: 20px; padding: 15px;">
+            <form th:action="@{/dashboard}" method="get" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="font-size: 12px; margin-bottom: 2px;">Filter Category</label>
+                    <select name="categoryId" onchange="this.form.submit()">
+                        <option value="0" th:selected="${currentCategory == 0}">All Categories</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.id}"
+                                th:text="${cat.name}"
+                                th:selected="${cat.id == currentCategory}"></option>
+                    </select>
+                </div>
+
+                <div style="flex: 1; min-width: 130px;">
+                    <label style="font-size: 12px; margin-bottom: 2px;">Sort By</label>
+                    <select name="sortBy" onchange="this.form.submit()">
+                        <option value="date" th:selected="${currentSortBy == 'date'}">Date Added</option>
+                        <option value="category" th:selected="${currentSortBy == 'category'}">Category</option>
+                    </select>
+                </div>
+
+                <div style="flex: 1; min-width: 130px;">
+                    <label style="font-size: 12px; margin-bottom: 2px;">Direction</label>
+                    <select name="direction" onchange="this.form.submit()">
+                        <option value="desc" th:selected="${currentDirection == 'desc'}">Descending</option>
+                        <option value="asc" th:selected="${currentDirection == 'asc'}">Ascending</option>
+                    </select>
+                </div>
+
+            </form>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(informations)}" class="cards-grid">
+
+            <div th:each="info : ${informations}" class="info-card">
+                <div class="card-header">
+                    <h3 class="card-title" th:text="${info.title}">Note Title</h3>
+                    <span class="category-badge" th:text="${info.category != null ? info.category.name : 'uncategorized'}">category</span>
+                </div>
+
+                <div class="card-actions">
+                    <a th:href="@{/information/edit/{id}(id=${info.id})}" class="btn-edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+
+                    <a th:href="@{/information/share/{id}(id=${info.id})}" class="btn-edit" style="background-color: #007bff;">
+                        <i class="fas fa-share-alt"></i> Share
+                    </a>
+
+                    <form th:action="@{/information/delete/{id}(id=${info.id})}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this note?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+
+                <p class="card-content" th:text="${info.content}">This is the sample body description.</p>
+
+                <div class="card-footer">
+                    <span th:if="${#strings.isEmpty(info.link)}">No Link</span>
+                    <a th:if="${not #strings.isEmpty(info.link)}" th:href="${info.link}" target="_blank" class="card-link">Visit Link</a>
+                    <span th:text="${#temporals.format(info.dateAdded, 'dd-MM-yyyy')}">14-05-2026</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(informations)}" class="empty-message">
+            Your repository is currently empty. Use the form on the left to save your first piece of information!
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

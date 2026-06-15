@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Note - StoreEverything</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="public-card">
+    <div class="header">
+        <h1 class="title" th:text="${information.title}">Note Title</h1>
+        <span class="badge" th:text="${information.category != null ? information.category.name : 'uncategorized'}">Category</span>
+    </div>
+
+    <p class="content" th:text="${information.content}">Note Content body goes here...</p>
+
+    <div class="footer">
+        <div>
+            <span th:if="${#strings.isEmpty(information.link)}" style="font-style: italic;">No attachment link</span>
+            <a th:if="${not #strings.isEmpty(information.link)}" th:href="${information.link}" target="_blank" style="color: #007bff; font-weight: bold; text-decoration: none;">Visit Resource Link</a>
+        </div>
+        <div th:text="'Added on: ' + ${#temporals.format(information.dateAdded, 'dd-MM-yyyy')}">14-05-2026</div>
+    </div>
+
+    <a th:href="@{/login}" class="btn-login">Create your own account on StoreEverything →</a>
+</div>
+
+</body>
+</html>

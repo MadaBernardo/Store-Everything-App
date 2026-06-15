@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to StoreEverything</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="welcome-container">
+    <h1>StoreEverything</h1>
+
+    <p>
+        A secure and web-based application designed to save, organize, and share
+        your noteworthy information, such as websites, shopping lists, notes, and meeting invitations.
+    </p>
+
+    <div class="button-group">
+        <a th:href="@{/login}" class="btn btn-login">Sign In</a>
+        <a th:href="@{/register}" class="btn btn-register">Register</a>
+    </div>
+
+    <div class="footer-note">
+        Web Application Programming in Java &copy; 2026
+    </div>
+</div>
+
+</body>
+</html>

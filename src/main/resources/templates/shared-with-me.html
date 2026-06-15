@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared With Me - StoreEverything</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>StoreEverything</h1>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a th:href="@{/dashboard}">Home</a>
+            <a th:href="@{/information/shared-with-me}" style="font-weight: bold; text-decoration: underline;">Shared With Me</a>
+
+            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+               th:href="@{/admin/users}"
+               class="admin-link">
+                Manage Users
+            </a>
+        </div>
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="logout-btn">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel">
+    <h2><i class="fas fa-user-friends"></i> Shared With Me</h2>
+    <p class="form-hint" style="font-size: 14px; margin-bottom: 25px;">Information and notes shared with your account by other users.</p>
+
+    <div th:if="${not #lists.isEmpty(sharedInformations)}" class="cards-grid">
+        <div th:each="info : ${sharedInformations}" class="info-card">
+
+            <div class="card-header">
+                <h3 class="card-title" th:text="${info.title}">Title</h3>
+                <span class="category-badge" th:text="${info.category != null ? info.category.name : 'uncategorized'}">category</span>
+            </div>
+
+            <div class="owner-badge">
+                <th:block th:text="'Shared by: ' + ${info.user.firstName} + ' (' + ${info.user.login} + ')'"></th:block>
+            </div>
+
+            <p class="card-content" th:text="${info.content}">Content</p>
+
+            <div class="card-footer">
+                <span th:if="${#strings.isEmpty(info.link)}">No Link</span>
+                <a th:if="${not #strings.isEmpty(info.link)}" th:href="${info.link}" target="_blank" class="card-link">Visit Link</a>
+                <span th:text="${#temporals.format(info.dateAdded, 'dd-MM-yyyy')}">date</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(sharedInformations)}" class="empty-message">
+        <i class="fas fa-folder-open" style="display:block; font-size: 2rem; margin-bottom: 10px; color: #ccc;"></i>
+        No one has shared any notes with you yet.
+    </div>
+</div>
+
+</body>
+</html>

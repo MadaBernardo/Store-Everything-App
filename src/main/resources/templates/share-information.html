@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Share Note - StoreEverything</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="share-container">
+    <div class="share-card">
+        <div class="form-header">
+            <h2><i class="fas fa-share-alt"></i> Share Note: <span th:text="${information.title}">Title</span></h2>
+            <p style="color: #666; font-size: 0.9rem;">Choose how you want to share this information.</p>
+        </div>
+
+        <div class="share-section">
+            <h4><i class="fas fa-link"></i> Public Link Access</h4>
+            <p style="font-size: 0.85rem; color: #555;">When enabled, anyone with the specific link can view this note.</p>
+
+            <form th:action="@{/information/share/{id}/toggle-link(id=${information.id})}" method="post">
+                <input type="hidden" name="sharedLink" th:value="${!information.sharedLink}"/>
+                <button type="submit" th:class="${information.sharedLink} ? 'btn-delete' : 'btn-blue'"
+                        th:text="${information.sharedLink} ? 'Disable Public Link' : 'Enable Public Link'">
+                </button>
+            </form>
+
+            <div th:if="${information.sharedLink}" style="margin-top: 10px;">
+                <label style="font-size: 12px;">Copy this link:</label>
+                <input type="text" th:value="'http://localhost:8080/public/share/' + ${information.id}" readonly onclick="this.select();" style="background: #e9ecef; font-family: monospace; font-size: 0.85rem;"/>
+            </div>
+        </div>
+
+        <div class="share-section">
+            <h4><i class="fas fa-user-plus"></i> Share with Specific User</h4>
+            <form th:action="@{/information/share/{id}/add-user(id=${information.id})}" method="post" style="display: flex; gap: 10px;">
+                <input type="text" name="userLogin" placeholder="Enter user's login username..." required style="flex: 1;"/>
+                <button type="submit" class="btn-blue">Add</button>
+            </form>
+
+            <div style="margin-top: 15px;">
+                <label style="font-size: 13px; color: #555;">Currently shared with:</label>
+                <div th:if="${#sets.isEmpty(information.sharedWithUsers)}" style="font-style: italic; font-size: 0.85rem; color: #888; margin-top: 5px;">Not shared with any specific user yet.</div>
+                <ul class="user-list">
+                    <li class="user-item" th:each="u : ${information.sharedWithUsers}">
+                        <i class="fas fa-user"></i> <span th:text="${u.login}">username</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <a th:href="@{/dashboard}" class="btn-cancel">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>

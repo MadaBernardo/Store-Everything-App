@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>StoreEverything - Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="register-container">
+    <h2>Create Account</h2>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" th:field="*{firstName}" required autofocus />
+                <span class="form-hint">3-20 letters, e.g., John</span>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" th:field="*{lastName}" required />
+                <span class="form-hint">3-50 letters, e.g., Doe</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" th:field="*{age}" min="1" required />
+            <span class="form-hint">Must be 18 years or older</span>
+        </div>
+
+        <div class="form-group">
+            <label for="login">Username (Login)</label>
+            <input type="text" id="login" th:field="*{login}" required />
+            <span class="form-hint">3-20 characters, strictly lowercase</span>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" required />
+            <span class="form-hint">Minimum 5 characters</span>
+        </div>
+
+        <div class="form-group">
+            <label for="role">Account Type</label>
+            <select id="role" th:field="*{role}" required>
+                <option value="FULL_USER">Full User (Can add information)</option>
+                <option value="USER">Standard User (Read Only)</option>
+            </select>
+            <span class="form-hint">Defines your access privileges</span>
+        </div>
+
+        <button type="submit" class="btn-success">Register</button>
+    </form>
+
+    <a th:href="@{/login}" class="login-link">Already have an account? Sign In</a>
+</div>
+
+</body>
+</html>

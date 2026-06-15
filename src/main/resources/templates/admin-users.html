@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - StoreEverything</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+<div class="navbar">
+    <h1>StoreEverything Admin Command Center</h1>
+    <div class="nav-container">
+        <div class="nav-links">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/admin/users}" style="font-weight: bold; text-decoration: underline;">Manage Users</a>
+        </div>
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" class="logout-btn">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel">
+    <h2>User Management Accounts Registry</h2>
+    <p style="color: #666; font-size: 0.9rem;">Review registered system users and elevate clearance privileges as requested by the evaluation guide.</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Username (Login)</th>
+            <th>Age</th>
+            <th>Assigned Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}">1</td>
+            <td th:text="${u.firstName + ' ' + u.lastName}">John Doe</td>
+            <td th:text="${u.login}" style="font-family: monospace;">johndoe</td>
+            <td th:text="${u.age}">25</td>
+            <td>
+                <span th:if="${u.role == 'ADMIN'}" class="badge badge-admin">ADMIN</span>
+                <span th:if="${u.role == 'FULL_USER'}" class="badge badge-full">FULL USER</span>
+                <span th:if="${u.role == 'USER'}" class="badge badge-limited">LIMITED USER</span>
+            </td>
+            <td>
+                <form th:if="${u.role == 'USER'}" th:action="@{/admin/users/promote/{id}(id=${u.id})}" method="post" style="margin: 0;">
+                    <button type="submit" class="btn-promote">Promote to Full User</button>
+                </form>
+                <span th:if="${u.role != 'USER'}" style="color: #aaa; font-style: italic; font-size: 12px;">No Actions Available</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
